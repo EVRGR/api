@@ -6,9 +6,7 @@ markdown2extras: wiki-tables
 
 # Evergreen API
 
-This is the description for the REST interface between an application (mobile or web)
- and the server. Each site can 
-
+This is the description for the REST interface between an application (mobile or web) and the server. Each site can act as a 'device' and have an Evergreen wallet for each of it's users. It can also allow Evergreen users to withdraw from the account to the wallet. This is an easy way of implementing an internal fee-free marketplace.
 
 ### All API calls start with
 
