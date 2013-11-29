@@ -1,0 +1,26 @@
+{
+  "endpoints": [
+    "POST   /register_user",
+    "POST   /register_device",
+    "POST   /account_info",
+    "POST   /register_merchant",
+    "POST   /suggested_payors",
+    "POST   /search_users",
+    "POST   /make_payment",
+    "POST   /request_payment",
+    "POST   /cancel_request",
+    "POST   /reject_payment",
+    "POST   /withdraw",
+    "POST   /deposit",
+    "POST   /transaction_list",
+    "POST   /transaction_detail",
+    "POST   /leave_feedback",
+    "POST   /suggested_merchants",
+    "POST   /make\\_terminal_payment",
+    "POST   /qr_status",
+    "Common response",
+    "Listing products",
+    "Creating, Updating, Deleting:",
+    "POST   /exchange_rates"
+  ]
+}

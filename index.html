@@ -1,0 +1,1333 @@
+	<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Evergreen Mobile App REST API</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="media/css/restdown.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="header">
+    <h1>Evergreen Mobile App REST API Documentation</h1>
+</div>
+
+    <div id="sidebar">
+<ul>
+  <li><div><a href="#metadata-for-all-requests">Metadata for all requests:</a></div></li>
+  <li><div><a href="#validation">Validation</a></div></li>
+  <li><div><a href="#user-ids">User IDs</a></div></li>
+  <li><div><a href="#metadata-for-all-responses">Metadata for all responses:</a></div></li>
+  <li><div><a href="#account">Account</a></div>
+  <ul>
+    <li><div><a href="#POST-/register_user"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/register_user</span></span></a></div></li>
+    <li><div><a href="#POST-/register_device"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/register_device</span></span></a></div></li>
+    <li><div><a href="#POST-/account_info"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/account_info</span></span></a></div></li>
+    <li><div><a href="#POST-/register_merchant"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/register_merchant</span></span></a></div></li>
+  </ul></li>
+  <li><div><a href="#payment">Payment</a></div>
+  <ul>
+    <li><div><a href="#POST-/suggested_payors"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/suggested_payors</span></span></a></div></li>
+    <li><div><a href="#POST-/search_users"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/search_users</span></span></a></div></li>
+    <li><div><a href="#POST-/make_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/make_payment</span></span></a></div></li>
+    <li><div><a href="#POST-/request_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/request_payment</span></span></a></div></li>
+    <li><div><a href="#POST-/cancel_request"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/cancel_request</span></span></a></div></li>
+    <li><div><a href="#POST-/reject_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/reject_payment</span></span></a></div></li>
+  </ul></li>
+  <li><div><a href="#atm-functionality">ATM Functionality</a></div>
+  <ul>
+    <li><div><a href="#POST-/withdraw"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/withdraw</span></span></a></div></li>
+    <li><div><a href="#POST-/deposit"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/deposit</span></span></a></div></li>
+    <li><div><a href="#POST-/transaction_list"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/transaction_list</span></span></a></div></li>
+    <li><div><a href="#POST-/transaction_detail"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/transaction_detail</span></span></a></div></li>
+    <li><div><a href="#POST-/leave_feedback"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/leave_feedback</span></span></a></div></li>
+  </ul></li>
+  <li><div><a href="#merchant">Merchant</a></div>
+  <ul>
+    <li><div><a href="#POST-/suggested_merchants"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/suggested_merchants</span></span></a></div></li>
+    <li><div><a href="#POST-/make\_terminal_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/make_terminal_payment</span></span></a></div></li>
+    <li><div><a href="#POST-/qr_status"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/qr_status</span></span></a></div></li>
+  </ul></li>
+  <li><div><a href="#products">Products</a></div>
+  <ul>
+    <li><div><a href="#Common"><span class="method name"><span class="name">Common response</span></span></a></div></li>
+    <li><div><a href="#Listing"><span class="method name"><span class="name">Listing products</span></span></a></div></li>
+    <li><div><a href="#Creating,"><span class="method name"><span class="name">Creating, Updating, Deleting:</span></span></a></div></li>
+  </ul></li>
+  <li><div><a href="#exchange-rates">Exchange Rates</a></div>
+  <ul>
+    <li><div><a href="#POST-/exchange_rates"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/exchange_rates</span></span></a></div></li>
+  </ul></li>
+</ul>
+
+    </div>
+    <div id="content">
+
+<h1>Evergreen API</h1>
+<div class="intro">
+
+
+<p>This is the description for the REST interface between an application (mobile or web)
+ and the server. Each site can </p>
+
+<h3>All API calls start with</h3>
+
+<pre class="base">
+{{url_base}}
+https://play.evr.gr/rest/v01
+https://eu.evr.gr/rest/v01
+
+</pre>
+
+<h3>Format</h3>
+
+<p>All responses are <strong>JSON</strong></p>
+
+
+</div>
+<h1 id="metadata-for-all-requests">Metadata for all requests:</h1>
+
+<p>All requests contain a metadata block that contains information about the user's device,
+authentication, software version, OS version, and language.</p>
+
+<h3>Example:</h3>
+
+<pre><code>  "meta":
+  {
+   "uuid": "7a2a7841-a8c8-42c8-89e0-8043c7721327",
+   "evg_auth_token": "A49289392771D3849F982929",
+   "push_token": "F992829294892918482002948",
+   "platform" : "ios",
+   "platform_version": "6.1.3",
+   "device_model": "iPhone4,1",
+   "client_version": "0.9",
+   "language": "en_US",
+   "request_id": "3985829askdjk93859dkfj",
+   "lat" : 53.204829,
+   "lon" : 15.29484
+  }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>uuid</code></strong> (<em>required</em>) is the device's unique identifier, generated by BPXUUID on iOS.</p>
+
+<p><strong><code>evg_auth_token</code></strong> (<em>required except in login</em>) is the EVG authentication token to validate the request.  If an auth token has not yet been assigned, this parameter should not be sent.</p>
+
+<p><strong><code>push_token</code></strong> (<em>optional</em>) is the APNS token, if available for the user's device.</p>
+
+<p><strong><code>platform</code></strong> (<em>optional</em>) is the device's major platform, either <code>android</code> or <code>ios</code></p>
+
+<p><strong><code>platform_version</code></strong> (<em>optional</em>) is the device's operating system version, as reported by the  device.</p>
+
+<p><strong><code>device_model</code></strong> (<em>optional</em>) is the user's current device model, for example, "iPhone4,1" for the iPhone 4S.  To get the current device model, <a href="https://github.com/cyclestreets/ios/blob/master/lib/categories/UIDevice%2BMachine.m">see here</a></p>
+
+<p><strong><code>client_version</code></strong> (<em>required</em>) is the software version of the client as a string.</p>
+
+<p><strong><code>language</code></strong> (<em>optional</em>) is the BCP 47 language/locale tag appropriate for the client</p>
+
+<p><strong><code>request_id</code></strong> (<em>required</em>) is a client-generated request ID.  If two requests are received with the same request ID, the action will only be completed once.  If a second request is made with the same ID, the result of the first request should be returned if possible.</p>
+
+<p><strong><code>lat</code></strong> (<em>optional</em>) is a floating point value, indicating the user's current latitude, + for north, - for south.  Should be present at least on requests on startup and shutdown.</p>
+
+<p><strong><code>lon</code></strong> (<em>optional</em>) is a floating point value, indicating the user's current longitude, + for east, - for west.  Should be present at least on requests on startup and shutdown.</p>
+
+<h1 id="validation">Validation</h1>
+
+<p>All requests goes through in depth validation of post parameters. In the case of failure it returns status 400 and a body with "path" being the parameter that failed and "msg" basic information about the validation error. The validations in place can be found <a href="https://github.com/FractasticalLabs/evergreen-core/blob/master/src/evergreen_core/api/schemas.clj">in the code</a>, and examples of failing cases can be found <a href="https://github.com/FractasticalLabs/evergreen-core/blob/master/test/evergreen_core/api/schemas_test.clj">in the tests</a></p>
+
+<h1 id="user-ids">User IDs</h1>
+
+<p>Many REST calls take or return a user<em>id.  This is a string of the format <code>login_type:login_id</code>, where <code>login_type</code> current lin is either <code>facebook</code> or <code>qr</code>.  for <code>qr</code>, login</em>id is a string of the form: <code>https://qr.evr.gr/ID</code> where <code>ID</code> is a 16 character random hex string, assigned by the server.</p>
+
+<h1 id="metadata-for-all-responses">Metadata for all responses:</h1>
+
+<pre><code>"meta":
+{
+ "status": "upgrade",
+ "message": "Please upgrade your Evergreen app to the newest version on the iTunes Store to continue using Evergreen.",
+ "next_step": "go_to_url",
+ "url": "https://itunes.apple.com/498r8dsakkjssfa",
+ "wallet_balance": "150",
+ "account_balance": "1000"
+}
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>status</code></strong> (<em>required</em>) is the request status.  Allowable values are:</p>
+
+<ul>
+<li><p><code>authorized</code>: Continue as normal.</p></li>
+<li><p><code>unauthorized</code>: Authentication was not valid for this resource.  Display <code>message</code>, and proceed with <code>next_step</code> and/or <code>url</code> if present. </p></li>
+<li><p><code>error</code>: There was a server error.  Display <code>message</code> and proceed with <code>next_step</code> and/or <code>url</code>.  Log the error and report if possible.</p></li>
+<li><p><code>upgrade</code>: The client version is too old to be used.  Display <code>message</code>, and then proceed with <code>next_step</code> (usually <code>go_to_url</code>), usually a link to the appropriate app store.</p></li>
+</ul>
+
+<p><strong><code>message</code></strong> (<em>optional</em>) A textual message to display to the user in a dialog box immediately if this key is present.  The dialog should be presented with only an OK button, that when pressed performs the action in <code>next_step</code> if present.</p>
+
+<p><strong><code>next_step</code></strong> (<em>optional</em>) The next step to take after the message is presented.  If this key is not present, continue as normal.  Allowable values are:</p>
+
+<ul>
+<li><code>home</code>: Go to the home screen.</li>
+<li><code>logout</code>: Erase auth token and return to the login screen.</li>
+<li><code>go_to_url</code>: Go to this URL in an external browser immediately.</li>
+<li><code>register</code>: User is not registered on this server. Redirect to registration screen.</li>
+</ul>
+
+<p><strong><code>url</code></strong> (<em>optional</em>) The URL to go to if <code>next_step</code> is <code>go_to_url</code>.</p>
+
+<p><strong><code>wallet_balance</code></strong> (<em>optional</em>) The new wallet balance after this request, if any.  Sent as a string, and should be processed as a decimal number.  For v1 will always be an integral value.</p>
+
+<p><strong><code>account_balance</code></strong> (<em>optional</em>) The new account balance after this request, if any.  Sent as a string, and should be processed as a decimal number.  For v1 will always be an integral value.</p>
+
+<h1 id="account">Account</h1>
+
+<h2 id="POST-/register_user"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/register_user</span></span></h2>
+
+<p>Registers a new user. One must either provide a standard email/password or a facebook login. Can be performed from any mobile device or website or "terminal app" (the special merchant version of the app).</p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/register_user
+
+{
+  "meta" : {...},
+  "user_id": "facebook:123412124",
+  "pin": "12346",
+  "name": "James Jenkins",
+  "passphrase": "superSecret1",
+  "email": "james.jenkins@gmail.com",
+  "qr_code": "5v4XR37c9lzp8E1bZIO1L2956S5643"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>user_id</code></strong> (<em>optional</em>) is the EVG internal user id of the user.  User_id takes the form
+<code>facebook:&lt;facebook_user_id&gt;</code> or <code>qr:&lt;qr code&gt;</code></p>
+
+<p><strong><code>pin</code></strong> (<em>required</em>) is secret PIN code of the user. Must be five digits.</p>
+
+<p><strong><code>name</code></strong> (<em>optional</em>) The name that a user wants to be called. </p>
+
+<p><strong><code>passphrase</code></strong> (<em>optional</em>) optional passphrase for a user account. Must contain a lowercase, uppercase, and non-letter character.</p>
+
+<p><strong><code>email</code></strong> (<em>required</em>) Optional email for a user</p>
+
+<p><strong><code>qr_code</code></strong> (<em>optional</em>) Associate a qr_code with a user and create associated device. </p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status":"error",
+ "message":"username can only contain alphanumeric characters",
+ "evg_auth_token": "A49289392771D3849F982929"
+
+ }
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>status</code></strong> (<em>required</em>) The result of the registration.  Valid responses are:</p>
+
+<ul>
+<li><p><code>success</code>: User was successfully registered</p></li>
+<li><p><code>error</code>: Unspecified error.</p></li>
+</ul>
+
+<p><strong><code>message</code></strong> (<em>optional</em>) Message that accompanies error. (i.e. "no user")</p>
+
+<p><strong><code>evg_auth_token</code></strong> (<em>optional</em>) is a string, the Evergreen auth token to be used with future requests to the server. Should be returned if user registers on a mobile device.</p>
+
+<p><strong><code>email</code></strong> (<em>optional</em>) Optional email for a user to be used for login</p>
+
+<p><strong><code>passphrase</code></strong> (<em>optional</em>)  Passphrase for a user account</p>
+
+<h2 id="POST-/register_device"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/register_device</span></span></h2>
+
+<p>Register a new device (only a device, account must already exist) with the server. One must either provide a standard email/password or facebook. </p>
+
+<h4>POST /register_device</h4>
+
+<p>Registers a new device for a user.</p>
+
+<pre><code>POST {{url_base}}/register_device
+
+{
+  "meta" : {...},
+  "user_id": "facebook:123412124",
+  "facebook_auth_token": "939ae7492900f3c8902093b"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>user_id</code></strong> (<em>required</em>) is the EVG internal user id of the user.  For now, only facebook login
+is supported, and user_id therefore takes the form <code>facebook:&lt;facebook_user_id&gt;</code></p>
+
+<p><strong><code>facebook_auth_token</code></strong> (<em>required</em>) is the auth token received from facebook.</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta" {...},
+ "evg_auth_token": "A49289392771D3849F982929",
+ "name": "Joel Dietz"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>status</code></strong> (<em>required</em>) is either <code>authorized</code> or <code>unauthorized</code></p>
+
+<p><strong><code>evg_auth_token</code></strong> (<em>required</em>) is a string, the Evergreen auth token to be used with future requests to the server.</p>
+
+<p><strong><code>name</code></strong> (<em>required</em>) the name of the person associated with the user_id.</p>
+
+<h2 id="POST-/account_info"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/account_info</span></span></h2>
+
+<p>Gets the user's account information.  This is, for now, contained entirely in the meta block.</p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/account_info
+
+{
+  "meta" : {...},
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "name": "Charlie Chaplin",
+ "email": "winter.light@gmx.ch",
+ "is_merchant" : "false"
+ }
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>name</code></strong> (<em>required</em>) The name that a user wants to be called. </p>
+
+<p><strong><code>email</code></strong> (<em>required</em>) Email for a user if provided, empty string if not</p>
+
+<p><strong><code>is_merchant</code></strong> (<em>required</em>) Whether or not the user is registered as a merchant</p>
+
+<h2 id="POST-/register_merchant"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/register_merchant</span></span></h2>
+
+<p>Change merchant specific information </p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/register_merchant
+
+{
+  "meta" : {...},
+  "is_merchant": "true",
+  "description": "I sell cheese. Contact me at cheesy@eiffeltower.fr"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>user_id</code></strong> (<em>required</em>) is the EVG internal user id of the user.  For now, only facebook login
+is supported, and user_id therefore takes the form <code>facebook:&lt;facebook_user_id&gt;</code></p>
+
+<p><strong><code>is_merchant</code></strong> (<em>required</em>) turns the merchant listing on in the map. </p>
+
+<p><strong><code>description</code></strong> (<em>optional</em>) Description that will appear next to merchant's name in listings </p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status":"error",
+ "message":"invalid passphrase"
+ }
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>status</code></strong> (<em>required</em>) The result of the registration .  Valid responses are:</p>
+
+<ul>
+<li><p><code>success</code>: Account information was successfully changed</p></li>
+<li><p><code>error</code>: Unspecified error.</p></li>
+</ul>
+
+<p><strong><code>message</code></strong> (<em>optional</em>) Message that accompanies error. </p>
+
+<h1 id="payment">Payment</h1>
+
+<h2 id="POST-/suggested_payors"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/suggested_payors</span></span></h2>
+
+<p>Get a list of suggested payees based on nearby users.  Takes a lat/lon position.  The response contains a recent payment partners and nearby payment partners list.</p>
+
+<h4>Example request</h4>
+
+<pre><code> POST {{url_base}}/suggested_payors
+
+ {
+  "meta": {...},
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above</p>
+
+<h4>Example response</h4>
+
+<pre><code>  {
+   "meta": { ... },
+   "recent":
+   [
+    {
+     "name": "Dave Kammeyer",
+     "user_id": "facebook:1234121232",
+     "image": "https://s3.aws.com/9583ksajka8493.jpg",
+     "positive_rating": 80,
+     "negative_rating": 0
+
+    },
+    {
+     "name": "Moe Burney",
+     "user_id": "facebook:213123213",
+     "image": "https://s3.aws.com/akjsk389kdka.jpg",
+     "positive_rating": 85,
+     "negative_rating": 1
+    }
+   ],
+   "nearby":
+   [
+    {
+    "name" : "Agora Cafe",
+    "user_id": "facebook:2131212345",
+    "image": "https://s3.aws.com/4898asijfkskd.jpg",
+    "lat": 50.23849284,
+    "lon": 15.39482929,
+    "last_seen": "2013-03-21T14:20:33Z",
+    "distance" : 120,
+    "positive_rating": 95,
+    "negative_rating": 0
+    }
+   ]
+  }
+</code></pre>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>recent</code></strong> (<em>required</em>) is the list of recent payment partners for the user.  This may be an empty list, but the key is required.</p>
+
+<p><strong><code>nearby</code></strong> (<em>required</em>) is a list of physically nearby users.</p>
+
+<p><strong><code>name</code></strong> (<em>required</em>) is the name of the suggested user.</p>
+
+<p><strong><code>user_id</code></strong> (<em>required</em>) is the EVG login ID of the user.  Example format: <code>facebook:&lt;facebook_user_id&gt;</code></p>
+
+<p><strong><code>image</code></strong> (<em>optional</em>) is a URL to an image file for the suggested
+  user.</p>
+
+<p><strong><code>lat</code></strong> (<em>optional</em>) The potential payor's latitude, for nearby payors</p>
+
+<p><strong><code>lon</code></strong> (<em>optional</em>) The potential payor's longitude, for nearby payors</p>
+
+<p><strong><code>distance</code></strong> (<em>optional</em>) distance in meters from user. </p>
+
+<p><strong><code>last_seen</code></strong> (<em>optional</em>) When the potential payor's location was last updated,
+  for nearby payors</p>
+
+<p><strong><code>positive_rating</code></strong> (<em>optional</em>) number from 1-100 representing the trustworthiness of a user.</p>
+
+<p><strong><code>negative_rating</code></strong> (<em>optional</em>) number from 1-100 representing the lack of trustworthiness of a user.</p>
+
+<h2 id="POST-/search_users"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/search_users</span></span></h2>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/search_users
+
+  {
+   "meta": { ... },
+   "query": "Dave"
+  }
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>query</code></strong> (<em>required</em>) is user's search query. </p>
+
+<h4>response</h4>
+
+<pre><code>  {
+   "meta": { ... },
+   "results":
+   [
+    {
+     "name": "Dave Kammeyer",
+     "user_id": "facebook:1234121232",
+     "image": "https://s3.aws.com/9583ksajka8493.jpg",
+     "positive_rating": 80,
+     "negative_rating": 0
+
+    },
+    {
+     "name": "Dave Johnson",
+     "user_id": "facebook:545443544",
+     "image": "https://s3.aws.com/akjskasdk3992dka.jpg",
+     "positive_rating": 80,
+     "negative_rating": 20
+    }
+   ],
+  }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>results</code></strong> (<em>required</em>) is the list of search results.</p>
+
+<p><strong><code>name</code></strong> (<em>required</em>) is the name of the user.</p>
+
+<p><strong><code>user_id</code></strong> (<em>required</em>) is the EVG login ID of the user.  Example format <code>facebook:&lt;facebook_user_id&gt;</code></p>
+
+<p><strong><code>image</code></strong> (<em>optional</em>) is a URL to an image file for the user.</p>
+
+<p><strong><code>positive_rating</code></strong> (<em>optional</em>) number from 1-100 representing the trustworthiness of a user.</p>
+
+<p><strong><code>negative_rating</code></strong> (<em>optional</em>) number from 1-100 representing the lack of trustworthiness of a user.</p>
+
+<h2 id="POST-/make_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/make_payment</span></span></h2>
+
+<p>Make a payment to a user, possibly in response to a payment request.</p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/make_payment
+
+{
+  "meta" : {...},
+  "transaction_id": "3948839skdka92askdf",
+  "amount": "272",
+  "payee": "facebook:123412124",
+  "request_description": "Because I like you"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>optional</em>) The transaction id of the request, if the payment is in response to a request.</p>
+
+<p><strong><code>amount</code></strong> (<em>required</em>) The amount of the transaction, in EVG credits, as a string.  Should be processed as a decimal value, but for now, only integral values of credits are allowed. <strong>Must be positive</strong></p>
+
+<p><strong><code>payee</code></strong> (<em>required</em>) The EVG user id to be paid.  Can be of the form: <code>facebook:&lt;facebook id&gt;</code> or <code>qr:&lt;qr code&gt;</code></p>
+
+<p><strong><code>request_description</code></strong> (<em>optional</em>) A description of the
+  transaction, provided by the user, shown to the payee.</p>
+
+<p><strong><code>currency_amount</code></strong> (<em>optional</em>) The corresponding amount of traditional currency, if any.</p>
+
+<p><strong><code>currency_type</code></strong> (<em>optional</em>) The ISO 4217 currency being loaded onto the card, a string.  Required if <code>currency_amount</code> is present.</p>
+
+<p><em>* item_ids *</em> (<em>optional</em>) An array of items ids as strings (as provided by /items)</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status": "insufficient_funds",
+ "status_message": "Your account balance is only 200ε, you cannot make this payment."
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>status</code></strong> (<em>required</em>) The result of the payment request.  Valid responses are:
+- <code>success</code>: The payment was successful.</p>
+
+<ul>
+<li><p><code>insufficient_funds</code>: The Wallet balance is insufficient to make the transaction.</p></li>
+<li><p><code>invalid_account</code>: The payee account is invalid.</p></li>
+<li><p><code>error</code>: Some other error</p></li>
+</ul>
+
+<p><strong><code>status_message</code></strong> (<em>optional</em>) A message to display to the user modally to explain the result of the transaction</p>
+
+<h2 id="POST-/request_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/request_payment</span></span></h2>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/request_payment
+
+{
+  "meta" : {...},
+  "payor": "facebook:1234121232",
+  "amount": "272",
+  "request_description": "Payment for rideshare to Rome."
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>payor</code></strong> (<em>required</em>) The EVG ID of the user that payment is being requested from</p>
+
+<p><strong><code>amount</code></strong> (<em>required</em>) The number of EVG credits requested, as a string.  Should be processed as a decimal number, but for now only integral values of credits are allowed.</p>
+
+<p><strong><code>request_description</code></strong> (<em>required</em>) A description of the transaction, provided by the user, shown to the payee.</p>
+
+<p><em>* item_ids *</em> (<em>optional</em>) An array of items ids as strings (as provided by /items)</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta" {...},
+ "transaction_id": "3948839skdka92askdf"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>required</em>) A unique Transaction ID representing the request and any subsequent payment.  The Client should hold on to this to request status updates. </p>
+
+<h2 id="POST-/cancel_request"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/cancel_request</span></span></h2>
+
+<p>Cancels request that has been made by payee </p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/cancel_payment
+
+{
+  "meta" : {...},
+   "transaction_id": "3948839skdka92askdf"
+
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>required</em>) A unique Transaction ID representing the request.  A person must be the originator of the request in order to cancel it. </p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta" {...},
+ "status" : "success"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<h2 id="POST-/reject_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/reject_payment</span></span></h2>
+
+<p>Reject a previous request for payment.</p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/reject_payment
+
+{
+  "meta" : {...},
+  "transaction_id": "3948839skdka92askdf",
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>required</em>) The transaction ID if of the request to reject.</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status": "already_paid",
+ "status_message": "The payment has already been sent!"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>status</code></strong> (<em>required</em>) The status of the rejection, possible values are:</p>
+
+<ul>
+<li><p><code>success</code>: The request has been rejected</p></li>
+<li><p><code>already_paid</code>: The request has already been paid (by another device)</p></li>
+<li><p><code>error</code>: Some other error.</p></li>
+</ul>
+
+<p><strong><code>status_message</code></strong> (<em>optional</em>) A status message to display in an dialog box explaining an exceptional condition.</p>
+
+<h1 id="atm-functionality">ATM Functionality</h1>
+
+<p>Withdraw and depositing credits from the user's EVG account.</p>
+
+<h2 id="POST-/withdraw"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/withdraw</span></span></h2>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/withdraw
+
+{
+  "meta" : {...},
+  "amount": "300",
+  "PIN": "12346"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>amount</code></strong> (<em>required</em>) The number of credits to withdraw.  Handle as decimal, integral only for now.</p>
+
+<p><strong><code>PIN</code></strong> (<em>required</em>) The user's PIN code.</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status": "insufficient_funds",
+ "status_message" : "You only have 100 credits available in your account!"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>status</code></strong> (<em>required</em>) One of the following:</p>
+
+<ul>
+<li><p><code>success</code>: The withdrawal was successful.</p></li>
+<li><p><code>insufficient_funds</code>: The user does not have enough funds in his bank account to make the withdrawal.</p></li>
+<li><p><code>wrong_pin</code>: The wrong PIN code was supplied.</p></li>
+<li><p><code>error</code>: There was some other error.</p></li>
+</ul>
+
+<p><strong><code>status_message</code></strong> (<em>optional</em>) A message to display in a dialog to the user explaining any exceptional result of the transaction.</p>
+
+<h2 id="POST-/deposit"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/deposit</span></span></h2>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/deposit
+
+{
+  "meta" : {...},
+  "amount": "34"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>amount</code></strong> (<em>required</em>) The number of credits to deposit.  Handle as decimal, integral only for now.</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status": "success"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>status</code></strong> (<em>required</em>) One of the following:</p>
+
+<ul>
+<li><p><code>success</code>: The deposit was successful.</p></li>
+<li><p><code>error</code>: Undefined error.</p></li>
+</ul>
+
+<p><strong><code>status_message</code></strong> (<em>optional</em>) A message to display in a dialog to the user explaining any exceptional result of the transaction.</p>
+
+<h2 id="POST-/transaction_list"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/transaction_list</span></span></h2>
+
+<p>Return a list of recent transactions, paginated.</p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/transaction_list
+
+{
+  "meta" : {...},
+  "start_position": "0",
+  "num_items": "10"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>start_position</code></strong> (<em>optional</em>) The starting position in the list of most recent transactions, ordered from most recent, starting at 0.  If <code>start_position</code> is omitted, start at position 0 </p>
+
+<p><strong><code>num_items</code></strong> (<em>optional</em>) Return at most <code>num_items</code> items.  If not specified, return all items after <code>start_position</code> </p>
+
+<h4>example response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "num_transactions": "2",
+ "transactions":
+ [
+  {
+   "transaction_id": "3895askjfka838dkf",
+   "transaction_status": "completed",
+   "request_date": "2013-03-21T14:21:33Z"
+   "payment_date": "2013-03-21T18:25:43Z"
+   "amount": "200",
+   "payor_id": "facebook:1234121232",
+   "payor_name": "Dave Kammeyer",
+   "payor_image": "https://s3.aws.com/9583ksajka8493.jpg",
+   "payee_id": "facebook:123412124",
+   "payee_name": "Joel Dietz",
+   "payee_image": "https://s3.aws.com/i388d0d983ks34.jpg",
+   "request_description": "Payment for rideshare to Rome.",
+   "feedback_status": "negative",
+   "feedback_description": "Goods Not Delivered"
+  },
+  {
+   "transaction_id": "39488akfksadjfk9384838",
+   "transaction_status": "requested",
+   "request_date": "2013-03-22T19:21:33Z"
+   "amount": "200",
+   "payor_id": "facebook:123412124",
+   "payor_name": "Joel Dietz",
+   "payor_image": "https://s3.aws.com/i388d0d983ks34.jpg",
+   "payee_id": "facebook:1234121232",
+   "payee_name": "Dave Kammeyer",
+   "payee_image": "https://s3.aws.com/9583ksajka8493.jpg",
+   "request_description": "Give me my money back!",
+  }
+ ]
+
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>num_transactions</code></strong> (<em>required</em>) the total number of transactions for the user.  Can be used to decide how many page requests to send.</p>
+
+<p><strong><code>transactions</code></strong> (<em>required</em>) the list of transactions.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>required</em>) is the ID of the transaction.</p>
+
+<p><strong><code>transaction_status</code></strong> (<em>required</em>) The status of the transaction: Can be:</p>
+
+<ul>
+<li><p><code>requested</code>: Money has been requested, but no response has been received yet.</p></li>
+<li><p><code>rejected</code>: The request was rejected by the recipient.</p></li>
+<li><p><code>completed</code>: The transaction has been completed.</p></li>
+</ul>
+
+<p><strong><code>request_date</code></strong> (<em>optional</em>) Is the date of the payment request, if any, in ISO8601 format.</p>
+
+<p><strong><code>payment_date</code></strong> (<em>optional</em>) Is the date of the payment, if any, in ISO8601 format.</p>
+
+<p><strong><code>amount</code></strong> (<em>required</em>) is the number of EVG credits of the transaction.  Processed as decimal, integral only for v1</p>
+
+<p><strong><code>payor_id</code></strong> (<em>required</em>) is the EVG user id of the payor. </p>
+
+<p><strong><code>payor_name</code></strong> (<em>required</em>) is the natural name of the payor.</p>
+
+<p><strong><code>payor_image</code></strong> (<em>optional</em>) is the URL of an image of the payor.</p>
+
+<p><strong><code>payee_id</code></strong> (<em>required</em>) is the EVG user id of the payee.</p>
+
+<p><strong><code>payee_name</code></strong> (<em>required</em>) is the natural name of the payee.</p>
+
+<p><strong><code>payee_image</code></strong> (<em>optional</em>) is the URL of an image of the payee.</p>
+
+<p><strong><code>request_description</code></strong> (<em>optional</em>) is a description of the payment request, if any.</p>
+
+<p><strong><code>feedback_status</code></strong> (<em>optional</em>) If the transaction was completed, The buyer's feedback on the transaction  Can be:</p>
+
+<ul>
+<li><p><code>none</code>: The buyer has not yet left feedback.</p></li>
+<li><p><code>positive</code>: The buyer has left positive feedback.</p></li>
+<li><p><code>negative</code>: The buyer has left negative feedback.</p></li>
+</ul>
+
+<p><strong><code>feedback_description</code></strong> (<em>optional</em>) If the feedback is negative, a description of the problem with the transaction.  Examples: "Goods not delivered", "Goods not as described", "Goods of lower quality than expected"</p>
+
+<h2 id="POST-/transaction_detail"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/transaction_detail</span></span></h2>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/transaction_detail
+
+{
+  "meta" : {...},
+  "transaction_id": "3895askjfka838dkf"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>required</em>) The ID of the transaction to list </p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "transaction_id": "3895askjfka838dkf",
+ "transaction_status": "requested",
+ "request_date": "2013-03-21T14:21:33Z"
+ "payment_date": "2013-03-21T18:25:43Z"
+ "amount": "200",
+ "payor_id": "facebook:1234121232",
+ "payor_name": "Dave Kammeyer",
+ "payor_image": "https://s3.aws.com/9583ksajka8493.jpg",
+ "payee_id": "facebook:123412124",
+ "payee_name": "Joel Dietz",
+ "payee_image": "https://s3.aws.com/i388d0d983ks34.jpg",
+ "request_description": "Payment for rideshare to Rome.",
+ "feedback_status": "negative",
+ "feedback_description": "Goods Not Delivered"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>required</em>) is the ID of the transaction.</p>
+
+<p><strong><code>transaction_status</code></strong> (<em>required</em>) The status of the transaction: Can be:</p>
+
+<ul>
+<li><p><code>requested</code>: Money has been requested, but no response has been received yet.</p></li>
+<li><p><code>rejected</code>: The request was rejected by the recipient.</p></li>
+<li><p><code>completed</code>: The transaction has been completed.</p></li>
+</ul>
+
+<p><strong><code>request_date</code></strong> (<em>optional</em>) Is the date of the payment request, if any, in ISO8601 format.</p>
+
+<p><strong><code>payment_date</code></strong> (<em>optional</em>) Is the date of the payment, if any, in ISO8601 format.</p>
+
+<p><strong><code>amount</code></strong> (<em>required</em>) is the number of EVG credits of the transaction.  Processed as decimal, integral only for v1</p>
+
+<p><strong><code>payor_id</code></strong> (<em>required</em>) is the EVG user id of the payor. </p>
+
+<p><strong><code>payor_name</code></strong> (<em>required</em>) is the natural name of the payor.</p>
+
+<p><strong><code>payor_image</code></strong> (<em>optional</em>) is the URL of an image of the payor.</p>
+
+<p><strong><code>payee_id</code></strong> (<em>required</em>) is the EVG user id of the payee.</p>
+
+<p><strong><code>payee_name</code></strong> (<em>required</em>) is the natural name of the payee.</p>
+
+<p><strong><code>payee_image</code></strong> (<em>optional</em>) is the URL of an image of the payee.</p>
+
+<p><strong><code>request_description</code></strong> (<em>optional</em>) is a description of the payment request, if any.</p>
+
+<p><strong><code>feedback_status</code></strong> (<em>optional</em>) If the transaction was completed, The buyer's feedback on the transaction  Can be:</p>
+
+<ul>
+<li><p><code>none</code>: The buyer has not yet left feedback.</p></li>
+<li><p><code>positive</code>: The buyer has left positive feedback.</p></li>
+<li><p><code>negative</code>: The buyer has left negative feedback.</p></li>
+</ul>
+
+<p><strong><code>feedback_description</code></strong> (<em>optional</em>) If the feedback is negative, a description of the problem with the transaction.  Examples: "Goods not delivered", "Goods not as described", "Goods of lower quality than expected"</p>
+
+<h2 id="POST-/leave_feedback"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/leave_feedback</span></span></h2>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/leave_feedback
+
+{
+  "meta" : {...},
+  "transaction_id": "39488akfksadjfk9384838",
+  "feedback_type":"positive"
+
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>transaction_id</code></strong> (<em>required</em>) is transaction id to leave feedback for.</p>
+
+<p><strong><code>feedback_type</code></strong> (<em>required</em>) Either</p>
+
+<ul>
+<li><p><code>positive</code>: Positive feedback</p></li>
+<li><p><code>negative</code>: Negative feedback</p></li>
+</ul>
+
+<p><strong><code>feedback_description</code></strong> (<em>optional</em>) If feedback is negative, a description of the problem.</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...}
+
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<h1 id="merchant">Merchant</h1>
+
+<p>Flow for registered merchants or users looking for merchants. Registered merchants can take payments from non-users</p>
+
+<h2 id="POST-/suggested_merchants"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/suggested_merchants</span></span></h2>
+
+<p>Get a list of suggested merchants based on nearby users.  Takes a lat/lon position. Returns 20 closest merchants to passed location. If no location is passed, use user's current location (provided in meta). </p>
+
+<h4>Example request</h4>
+
+<pre><code> POST {{url_base}}/suggested_merchants
+
+ {
+  "meta": {...},
+  "lat": 50.238494,
+  "lon": 15.394829,
+  "type": "health"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above</p>
+
+<p><strong><code>lat</code></strong> (<em>optional</em>) The location from which to start searching</p>
+
+<p><strong><code>lon</code></strong> (<em>optional</em>) The location from which to start searching</p>
+
+<p><strong><code>type</code></strong> (<em>optional</em>) Type of merchants to search for. Examples include "restaurant," "cafe," "heath," "beauty," "department store," "groceries," etc.  </p>
+
+<h4>Example response</h4>
+
+<pre><code>  {
+   "meta": { ... },
+   "merchants":
+   [
+    {
+    "name" : "Agora Cafe",
+    "description" : "Cafe/Restaurant, open M-F 12-9pm",
+    "type" : "restaurant",
+    "user_id": "facebook:2131212345",
+    "image": "https://s3.aws.com/4898asijfkskd.jpg",
+    "lat": 50.23849284,
+    "lon": 15.39482929,
+    "distance" : 120,
+    "positive_rating": 95,
+    "negative_rating": 0
+    },
+    {
+    "name" : "Kim's Yoga",
+    "description" : "check awesomekimsyoga.com for details",
+    "type" : "health",
+    "user_id": "facebook:2131212323",
+    "image": "https://s3.aws.com/4898asijfkskd.jpg",
+    "lat": 50.23849211,
+    "lon": 15.39482800,
+    "distance" : 25000,
+    "positive_rating": 80,
+    "negative_rating": 1
+    }
+   ]
+  }
+</code></pre>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>name</code></strong> (<em>required</em>) is the name of the merchant.</p>
+
+<p><strong><code>type</code></strong> (<em>optional</em>) Type of merchants to search for. Examples include "restaurant," "cafe," "heath," "beauty," "department store," "groceries," etc.  </p>
+
+<p><strong><code>user_id</code></strong> (<em>required</em>) is the EVG login ID of the merchant. </p>
+
+<p><strong><code>image</code></strong> (<em>optional</em>) is a URL to an image file for the suggested
+  user.</p>
+
+<p><strong><code>lat</code></strong> (<em>required</em>) The merchant's latitude</p>
+
+<p><strong><code>lon</code></strong> (<em>required</em>) The merchant's longitude</p>
+
+<p><strong><code>distance</code></strong> (<em>required</em>) distance in meters from the passed coordinates. </p>
+
+<p><strong><code>positive_rating</code></strong> (<em>optional</em>) number from 1-100 representing the trustworthiness of a merchant.</p>
+
+<p><strong><code>negative_rating</code></strong> (<em>optional</em>) number from 1-100 representing the lack of trustworthiness of a merchant.</p>
+
+<h2 id="POST-/make\_terminal_payment"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/make_terminal_payment</span></span></h2>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/make_terminal_payment
+{
+  "meta" : {...},
+  "amount": "45",
+  "description": "one cappicino + two lunches",
+  "payor": "facebook:123412124",
+  "PIN": "12346"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>amount</code></strong> (<em>required</em>) The amount of the transaction, in EVG credits, as a string.  Should be processed as a decimal value, but for now, only integral values of credits are allowed. <strong>Must be positive</strong></p>
+
+<p><strong><code>description</code></strong> (<em>required</em>) description of the object required for payment</p>
+
+<p><strong><code>payor</code></strong> (<em>required</em>) The EVG user id of the person making the payment. The payee is the logged in user (i.e. the merchant).  For cards, payor is <code>qr:&lt;QR code string&gt;</code> (see section on User Ids)</p>
+
+<p><strong><code>PIN</code></strong> (<em>required</em>) The PIN of the person making the payment. </p>
+
+<p><em>* item_ids *</em> (<em>optional</em>) An array of items ids as strings (as provided by /items)</p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status": "insufficient_funds",
+ "status_message": "Your account balance is only 200ε, you cannot make this payment."
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>status</code></strong> (<em>required</em>) The result of the payment request.  Valid responses are:</p>
+
+<ul>
+<li><p><code>success</code>: The payment was successful.</p></li>
+<li><p><code>insufficient_funds</code>: The Wallet balance is insufficient to make the transaction.</p></li>
+<li><p><code>invalid_user</code>: The username or card was not recognized.</p></li>
+<li><p><code>error</code>: Some other error</p></li>
+</ul>
+
+<p><strong><code>status_message</code></strong> (<em>optional</em>) A message to display to the user modally to explain the result of the transaction</p>
+
+<h2 id="POST-/qr_status"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/qr_status</span></span></h2>
+
+<p>QR Code actions will most likely happen in the context of a card that is issued by us and distributed by registered merchants, who will give away and then "load" the card by making a payment. We anticipate adding other workflows in the future.</p>
+
+<h4>example request</h4>
+
+<pre><code>POST {{url_base}}/qr_status
+
+{
+  "meta" : {...},
+  "qr_code" : "7xt6l1p23buNo1CR"
+}
+</code></pre>
+
+<h5>Where:</h5>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the request metadata block described above.</p>
+
+<p><strong><code>qr_code</code></strong> (<em>required</em>)  The decoded QR code without any interpretation. </p>
+
+<h4>response</h4>
+
+<pre><code> {
+ "meta": {...},
+ "status" : "valid",
+ "balance" : "138",
+ "image" : "https://images.evr.gr/38dadfjksiei.jpg",
+ "name" : "Joel Dietz"
+ }
+</code></pre>
+
+<h4>Where:</h4>
+
+<p><strong><code>meta</code></strong> (<em>required</em>) is the response metadata block described above.</p>
+
+<p><strong><code>status</code></strong> (<em>required</em>) Valid responses are:</p>
+
+<ul>
+<li><p><code>valid</code> The QR code is valid and can be charged.</p></li>
+<li><p><code>not_registered</code> The QR code is not yet registered, but is eligible for registration.</p></li>
+<li><p><code>invalid</code> The QR code is invalid and cannot be registered.</p></li>
+</ul>
+
+<p><strong><code>balance</code></strong> (<em>optional</em>) The balance of the card -- a positive integer as a quoted string.  Required if <code>status</code> is <code>valid</code>. </p>
+
+<p><strong><code>image</code></strong> (<em>optional</em>) The URL to a photo of the user, if available. </p>
+
+<p><strong><code>name</code></strong> (<em>optional</em>)  The natural name of the user, required if <code>status</code> is <code>valid</code></p>
+
+<h1 id="products">Products</h1>
+
+<h2 id="Common"><span class="method name"><span class="name">Common response</span></span></h2>
+
+<p>For all calls, the server replies with:</p>
+
+<pre><code> {
+ "meta": {...},
+      "items": [{"id": "42", "description": "description", "amount": "4"},
+                    {"id": "13", "description": "unlucky number", "amount": "3"}]
+ }
+</code></pre>
+
+<h2 id="Listing"><span class="method name"><span class="name">Listing products</span></span></h2>
+
+<p>Current user:</p>
+
+<pre><code>POST {{url_base}}/items
+
+{
+  "meta" : {...}
+}
+</code></pre>
+
+<p>For another user (read-only):</p>
+
+<pre><code>POST {{url_base}}/items
+
+{
+  "meta" : {...},
+      "payee": "facebook:..."
+}
+</code></pre>
+
+<h2 id="Creating,"><span class="method name"><span class="name">Creating, Updating, Deleting:</span></span></h2>
+
+<pre><code>POST {{url_base}}/items
+
+{
+  "meta" : {...},
+      "items": [{"id": "42", "description": "updated description", "amount": "4"},
+                    {"description": "new product (no id)", "amount": "4"},
+                    {"id": "13", "deleted": "true"}]
+}
+</code></pre>
+
+<p>When updating, only created/updated/deleted items have to be sent. Untouched items will be preserved.</p>
+
+<h1 id="exchange-rates">Exchange Rates</h1>
+
+<p>Rates from Evergreen to other currencies</p>
+
+<h2 id="POST-/exchange_rates"><span class="method justendpoint"><span class="endpoint"><span class="verb">POST</span> <span class="path">/exchange_rates</span></span></h2>
+
+<p>Return a list of current exchange rates </p>
+
+    </div>
+<script type="text/javascript" charset="utf-8">
+$(function() {
+    var headerHeight = $("#header").height();
+
+    var sections = $("#content h1[id], #content h2[id]");
+    var sectionOffsets = [];
+    var slack = 100;  // Give the section scroll some slack (in pixels).
+    sections.each(function(elem) {
+        sectionOffsets.push($(this).offset().top - headerHeight - slack);
+    });
+
+    var currSectionIdx = -1;
+    function getSectionIdx(scrollDistance) {
+        if (scrollDistance < sectionOffsets[0]) {
+            return -1;
+        } else {
+            for (var id = sectionOffsets.length; id > 0; id--) {
+                if (scrollDistance > sectionOffsets[id - 1]) {
+                    return id - 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    /** {{{ http://code.activestate.com/recipes/577787/ (r2) */
+    _slugify_strip_re = /[^\w\s-]/g;
+    _slugify_hyphenate_re = /[-\s]+/g;
+    function slugify(s) {
+      s = s.replace(_slugify_strip_re, '').trim().toLowerCase();
+      s = s.replace(_slugify_hyphenate_re, '-');
+      return s;
+    }
+    /** end of http://code.activestate.com/recipes/577787/ }}} */
+
+    /* See <https://github.com/trentm/restdown/issues/11>. */
+    function safechars(s) {
+      return s.replace(_slugify_strip_re, '');
+    }
+
+    $("#content").scroll(function() {
+        var scrollDistance = $("#content").scrollTop();
+        var sectionIdx = getSectionIdx(scrollDistance);
+
+        if (sectionIdx !== currSectionIdx) {
+            $("#sidebar li>div").removeClass("current");
+            currSectionIdx = sectionIdx;
+            if (currSectionIdx >= 0) {
+                var heading = $(sections[currSectionIdx]).text();
+                var possibleAnchors = [
+                    slugify(heading), // h1 or non-method h2
+                    heading.replace(/ /g, '-'), // h2 method, just name or just endpoint
+                    heading.slice(0, heading.lastIndexOf(' (')).trimRight().replace(/ /g, '-'), // h2 method, name and endpoint
+                ];
+                for (var i=0; i < possibleAnchors.length; i++) {
+                    var anchor = safechars(possibleAnchors[i]);
+                    try {
+                        $("#sidebar a[href=#" + anchor + "]").parent().addClass("current");
+                    } catch (e) {
+                        /* Ignore error if no such element. */
+                        console.log(e)
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>
