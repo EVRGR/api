@@ -1,5 +1,5 @@
 ---
-title: Evergreen Mobile App REST API
+title: Evergreen REST API
 mediaroot: media
 markdown2extras: wiki-tables
 ---
