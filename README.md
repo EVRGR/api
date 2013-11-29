@@ -8,9 +8,7 @@ This allows any web application or mobile application to have an Evergreen walle
 
 As part of the core Evergreen services, we offer free, instant payment within your e-commerce platform and with any other participants in the Evergreen network. 
 
-It is the same API that powers our mobile applications, as demoed on our website (www.evr.gr)
-
-For instance, if I have an e-commerce site I can have a unique wallet denominated in Evergreen credits. 
+It is the same API that powers our mobile applications, as demoed on our website (www.evr.gr) and available in the app store (http://bit.ly/evergreenapp)
 
 It contains a protocol for:
 
@@ -20,4 +18,4 @@ It contains a protocol for:
 
 	(3) Merchant listing of services
 
-The public version of the protocol does not include the purchase of credits. Please contact us at info@evr.gr if you need any additional service that may be part of the private API
+The public version of the protocol does not include the purchase of credits. Please contact us at info@evr.gr if you need any additional service that may be part of the private API.  
